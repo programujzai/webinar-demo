@@ -1,0 +1,11 @@
+springdoc:
+  swagger-ui:
+    path: api-docs
+app:
+  version: ^project.version^
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  profiles:
+    active: local
