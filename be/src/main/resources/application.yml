@@ -1,6 +1,11 @@
 springdoc:
+  api-docs:
+    path: /api-docs
   swagger-ui:
-    path: api-docs
+    disable-swagger-default-url: true
+    filter: true
+    path: /swagger-docs
+    tryItOutEnabled: true
 app:
   version: ^project.version^
 spring:
