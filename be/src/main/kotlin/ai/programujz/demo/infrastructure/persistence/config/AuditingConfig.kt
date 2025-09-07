@@ -7,10 +7,6 @@ import org.springframework.data.jdbc.repository.config.EnableJdbcAuditing
 import java.time.Instant
 import java.util.Optional
 
-/**
- * Configuration for Spring Data JDBC auditing.
- * Enables automatic population of createdAt and updatedAt fields.
- */
 @Configuration
 @EnableJdbcAuditing(dateTimeProviderRef = "instantDateTimeProvider")
 class AuditingConfig {

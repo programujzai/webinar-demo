@@ -6,6 +6,7 @@ import ai.programujz.demo.boundary.api.controller.request.UpdateTaskRequest
 import ai.programujz.demo.domain.model.Task
 import ai.programujz.demo.domain.model.TaskCompletion
 import ai.programujz.demo.domain.model.TaskId
+import ai.programujz.demo.domain.model.TaskSearchParams
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDate
@@ -47,6 +48,10 @@ class TaskService(
 
     fun getTasksDueBetween(startDate: LocalDate, endDate: LocalDate): List<Task> {
         return taskFetcher.getTasksDueBetween(startDate, endDate)
+    }
+
+    fun getBySearchParams(searchParams: TaskSearchParams): List<Task> {
+        return taskFetcher.getBySearchParams(searchParams)
     }
 
     fun completeTask(id: UUID, notes: String?): Task {

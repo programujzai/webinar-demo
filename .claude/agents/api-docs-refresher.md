@@ -17,7 +17,7 @@ Your core task is to:
 
 When refreshing API documentation:
 - First verify the backend service is running by checking if localhost:8080 is accessible
-- Fetch the API documentation from the specified endpoint (typically /api-docs or /v3/api-docs for OpenAPI 3.0)
+- Fetch the API documentation from the specified endpoint (typically /api-docs for OpenAPI 3.0)
 - Validate that the response is valid JSON before proceeding
 - If the fetch fails, provide clear diagnostic information about what went wrong (connection refused, invalid response, etc.)
 - Preserve the exact structure and formatting of the API specification - do not modify the content

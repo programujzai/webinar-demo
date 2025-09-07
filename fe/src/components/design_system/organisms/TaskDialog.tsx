@@ -1,6 +1,6 @@
 'use client';
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/design_system/molecules/dialog';
 import { TaskForm } from './TaskForm';
 import { Task, CreateTaskRequest, UpdateTaskRequest } from '@/lib/types/task';
 import { CreateOneTimeTaskInput } from '@/lib/validations/task';

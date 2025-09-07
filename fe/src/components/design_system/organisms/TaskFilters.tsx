@@ -1,9 +1,9 @@
 'use client';
 
 import { Filter, X } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/design_system/atoms/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/design_system/molecules/select';
+import { Badge } from '@/components/design_system/atoms/badge';
 import { TaskFilters as TaskFiltersType, TaskStatus } from '@/lib/types/task';
 
 interface TaskFiltersProps {

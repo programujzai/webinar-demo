@@ -22,17 +22,13 @@ import org.springframework.stereotype.Component
 import java.time.DayOfWeek
 import java.time.Instant
 
-/**
- * Mapper responsible for converting between domain models and persistence aggregates.
- * This keeps the domain layer completely isolated from persistence concerns.
- */
 @Component
 class TaskPersistenceMapper {
     
     /**
      * Convert domain Task to persistence TaskAggregate for new entities
      */
-    fun toTaskAggregate(task: Task): TaskAggregate {
+    fun toTaskAggregate(task: Task, existingAggregate: TaskAggregate? = null): TaskAggregate {
         return when (task) {
             is OneTimeTask -> TaskAggregate(
                 id = task.id.taskIdToUUID(),
@@ -41,7 +37,7 @@ class TaskPersistenceMapper {
                 category = task.category,
                 taskType = TaskType.ONE_TIME,
                 status = task.status.toEntityStatus(),
-                createdAt = null,  // Will be set by Spring Data JDBC auditing
+                createdAt = existingAggregate?.createdAt,  // Preserve existing createdAt
                 updatedAt = null,  // Will be set by Spring Data JDBC auditing
                 deletedAt = null,
                 oneTimeDetails = OneTimeTaskDetails(
@@ -50,7 +46,7 @@ class TaskPersistenceMapper {
                     completedAt = task.completedAt
                 ),
                 recurringDetails = null,
-                completions = emptySet()
+                completions = existingAggregate?.completions ?: emptySet()
             )
             
             is RecurringTask -> TaskAggregate(
@@ -60,7 +56,7 @@ class TaskPersistenceMapper {
                 category = task.category,
                 taskType = TaskType.RECURRING,
                 status = task.status.toEntityStatus(),
-                createdAt = null,  // Will be set by Spring Data JDBC auditing
+                createdAt = existingAggregate?.createdAt,  // Preserve existing createdAt
                 updatedAt = null,  // Will be set by Spring Data JDBC auditing
                 deletedAt = null,
                 oneTimeDetails = null,
@@ -72,7 +68,7 @@ class TaskPersistenceMapper {
                     endDate = task.endDate,
                     nextDueDate = task.nextDueDate
                 ),
-                completions = emptySet()
+                completions = existingAggregate?.completions ?: emptySet()
             )
         }
     }

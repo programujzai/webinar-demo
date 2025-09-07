@@ -3,6 +3,7 @@ package ai.programujz.demo.domain.repository
 import ai.programujz.demo.domain.model.Task
 import ai.programujz.demo.domain.model.TaskCompletion
 import ai.programujz.demo.domain.model.TaskId
+import ai.programujz.demo.domain.model.TaskSearchParams
 import ai.programujz.demo.domain.model.TaskStatus
 import java.time.LocalDate
 
@@ -15,6 +16,7 @@ interface TaskRepository {
     fun findByStatus(status: TaskStatus): List<Task>
     fun findDueToday(): List<Task>
     fun findDueBetween(startDate: LocalDate, endDate: LocalDate): List<Task>
+    fun findBySearchParams(searchParams: TaskSearchParams): List<Task>
     fun delete(id: TaskId)
     fun softDelete(id: TaskId)
     fun getMaxDisplayOrder(): Int

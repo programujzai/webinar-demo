@@ -4,6 +4,7 @@ import ai.programujz.demo.domain.exception.TaskNotFoundException
 import ai.programujz.demo.domain.model.Task
 import ai.programujz.demo.domain.model.TaskCompletion
 import ai.programujz.demo.domain.model.TaskId
+import ai.programujz.demo.domain.model.TaskSearchParams
 import ai.programujz.demo.domain.repository.TaskRepository
 import org.springframework.stereotype.Service
 import java.time.LocalDate
@@ -33,6 +34,10 @@ class TaskFetcher(
 
     fun getTasksDueBetween(startDate: LocalDate, endDate: LocalDate): List<Task> {
         return taskRepository.findDueBetween(startDate, endDate)
+    }
+
+    fun getBySearchParams(searchParams: TaskSearchParams): List<Task> {
+        return taskRepository.findBySearchParams(searchParams)
     }
 
     fun getTaskCompletions(id: TaskId): List<TaskCompletion> {

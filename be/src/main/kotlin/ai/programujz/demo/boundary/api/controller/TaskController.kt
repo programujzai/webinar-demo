@@ -7,6 +7,7 @@ import ai.programujz.demo.boundary.api.controller.request.UpdateTaskRequest
 import ai.programujz.demo.boundary.api.controller.response.TaskCompletionResponse
 import ai.programujz.demo.boundary.api.controller.response.TaskResponse
 import ai.programujz.demo.domain.TaskService
+import ai.programujz.demo.domain.model.TaskSearchParams
 import ai.programujz.demo.domain.model.TaskStatus
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
@@ -47,12 +48,15 @@ class TaskController(
         @RequestParam(required = false) startDate: LocalDate?,
         @RequestParam(required = false) endDate: LocalDate?
     ): List<TaskResponse> {
-        return when {
-            category != null -> taskService.getTasksByCategory(category)
-            dueDate != null -> taskService.getTasksDueToday()
-            startDate != null && endDate != null -> taskService.getTasksDueBetween(startDate, endDate)
-            else -> taskService.getAllTasks()
-        }.map { it.toResponse() }
+        val searchParams = TaskSearchParams(
+            category = category,
+            status = status,
+            dueDate = dueDate,
+            startDate = startDate,
+            endDate = endDate
+        )
+        
+        return taskService.getBySearchParams(searchParams).map { it.toResponse() }
     }
 
     @PostMapping("/{id}/complete")

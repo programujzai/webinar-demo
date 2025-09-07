@@ -2,10 +2,8 @@
 
 import { useState } from 'react';
 import { Plus } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { TaskList } from '@/components/tasks/TaskList';
-import { TaskFilters } from '@/components/tasks/TaskFilters';
-import { TaskDialog } from '@/components/tasks/TaskDialog';
+import { Button } from '@/components/design_system/atoms/Button';
+import { TaskList, TaskFilters, TaskDialog } from '@/components/design_system/organisms';
 import { 
   useTasks, 
   useCreateTask, 

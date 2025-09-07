@@ -36,14 +36,18 @@ data class TaskAggregate(
     val completions: Set<TaskCompletionRecord> = emptySet()
 ) {
     init {
-        // Validation to ensure consistency
+        // Validation to ensure consistency - allow null details during Spring Data JDBC mapping
+        // The details might be populated after initial construction
         when (taskType) {
-            TaskType.ONE_TIME -> require(oneTimeDetails != null && recurringDetails == null) {
-                "One-time task must have oneTimeDetails and no recurringDetails"
+            TaskType.ONE_TIME -> {
+                if (recurringDetails != null) {
+                    require(false) { "One-time task cannot have recurringDetails" }
+                }
             }
-
-            TaskType.RECURRING -> require(recurringDetails != null && oneTimeDetails == null) {
-                "Recurring task must have recurringDetails and no oneTimeDetails"
+            TaskType.RECURRING -> {
+                if (oneTimeDetails != null) {
+                    require(false) { "Recurring task cannot have oneTimeDetails" }
+                }
             }
         }
     }
@@ -61,7 +65,8 @@ data class TaskAggregate(
             )
 
             TaskType.RECURRING -> {
-                val nextDueDate = recurringDetails!!.calculateNextDueDate()
+                requireNotNull(recurringDetails) { "Recurring task must have recurringDetails to complete" }
+                val nextDueDate = recurringDetails.calculateNextDueDate()
                 this.copy(
                     recurringDetails = recurringDetails.copy(nextDueDate = nextDueDate),
                     completions = completions + TaskCompletionRecord(

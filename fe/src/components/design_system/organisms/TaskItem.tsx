@@ -2,16 +2,16 @@
 
 import { Check, Edit, Trash, Archive, Calendar, RefreshCw } from 'lucide-react';
 import { format } from 'date-fns';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Checkbox } from '@/components/ui/checkbox';
+import { Card } from '@/components/design_system/molecules/card';
+import { Button } from '@/components/design_system/atoms/Button';
+import { Badge } from '@/components/design_system/atoms/badge';
+import { Checkbox } from '@/components/design_system/atoms/checkbox';
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
   DropdownMenuItem, 
   DropdownMenuTrigger 
-} from '@/components/ui/dropdown-menu';
+} from '@/components/design_system/molecules/dropdown-menu';
 import { Task, OneTimeTask, RecurringTask } from '@/lib/types/task';
 import { cn } from '@/lib/utils';
 
