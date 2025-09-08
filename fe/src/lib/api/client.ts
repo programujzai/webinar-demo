@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
-import { ApiError } from '@/lib/types/task';
+import {ApiError} from "@/lib/api/task";
 
 class ApiClient {
   private client: AxiosInstance;

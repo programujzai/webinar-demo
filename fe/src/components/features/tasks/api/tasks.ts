@@ -1,5 +1,5 @@
-import {apiClient} from './client';
-import {CompleteTaskRequest, CreateTaskRequest, Task, TaskFilters, UpdateTaskRequest,} from '@/lib/types/task';
+import {apiClient} from '@/lib/api/client';
+import {CompleteTaskRequest, CreateTaskRequest, Task, TaskFilters, UpdateTaskRequest,} from '../types';
 
 const API_V1_BASE = '/api/v1';
 

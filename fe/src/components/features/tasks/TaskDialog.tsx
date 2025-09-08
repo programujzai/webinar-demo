@@ -2,8 +2,8 @@
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/design_system/molecules/dialog';
 import { TaskForm } from './TaskForm';
-import { Task, CreateTaskRequest, UpdateTaskRequest } from '@/lib/types/task';
-import { CreateOneTimeTaskInput } from '@/lib/validations/task';
+import { Task, CreateTaskRequest, UpdateTaskRequest } from './types';
+import { CreateOneTimeTaskInput } from './validations';
 
 interface TaskDialogProps {
   open: boolean;

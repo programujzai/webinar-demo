@@ -12,7 +12,7 @@ import {
   DropdownMenuItem, 
   DropdownMenuTrigger 
 } from '@/components/design_system/molecules/dropdown-menu';
-import { Task, OneTimeTask, RecurringTask } from '@/lib/types/task';
+import { Task, OneTimeTask, RecurringTask } from './types';
 import { cn } from '@/lib/utils';
 
 interface TaskItemProps {

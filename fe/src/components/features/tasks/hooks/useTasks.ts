@@ -1,6 +1,6 @@
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
-import {tasksApi} from '@/lib/api/tasks';
-import {CompleteTaskRequest, CreateTaskRequest, TaskFilters, UpdateTaskRequest} from '@/lib/types/task';
+import {tasksApi} from '../api';
+import {CompleteTaskRequest, CreateTaskRequest, TaskFilters, UpdateTaskRequest} from '../types';
 import {toast} from 'sonner';
 
 const TASKS_QUERY_KEY = 'tasks';
