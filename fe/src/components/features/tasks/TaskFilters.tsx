@@ -10,7 +10,7 @@ import {
     SelectValue
 } from '@/components/design_system/molecules/select';
 import {Badge} from '@/components/design_system/atoms/Badge';
-import {TaskFilters as TaskFiltersType, TaskStatus} from '/types/task';
+import {TaskFilters as TaskFiltersType, TaskStatus} from './types';
 
 interface TaskFiltersProps {
     filters: TaskFiltersType;
