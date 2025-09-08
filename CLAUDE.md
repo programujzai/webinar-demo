@@ -4,71 +4,82 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a Spring Boot Kotlin application with a PostgreSQL database, consisting of:
-- Backend: Spring Boot 3.5.5 with Kotlin 1.9.25, located in `/be` directory
-- Frontend: Empty directory at `/fe` (not yet implemented)
-- Database: PostgreSQL 15 running in Docker
+Project Domain is a todo list application.
 
-## Essential Commands
+- Backend is stored in the `/be` directory
+- Frontend is stored in the `/fe` directory
+- Database is PostgreSQL 15 running in Docker
 
-### Backend Development
+## Backend specific:
+
+#### Tech stack:
+
+- Spring Boot with Kotlin
+- Spring Web, Spring Security, Spring Data JDBC
+- Flyway for database migrations
+
+#### Commands:
 
 Build the project:
+
 ```bash
 cd be && ./gradlew build
 ```
 
 Run the application:
+
 ```bash
 cd be && ./gradlew bootRun
 ```
 
 Run tests:
+
 ```bash
 cd be && ./gradlew test
 ```
 
 Clean build:
+
 ```bash
 cd be && ./gradlew clean build
 ```
 
-### Database Management
+## Frontend specific
+
+#### Tech stack:
+
+- Next.js with TypeScript
+- Tailwind CSS for styling
+- React 18
+
+## Database Management
 
 Start PostgreSQL database:
+
 ```bash
 docker-compose up -d
 ```
 
 Stop database:
+
 ```bash
 docker-compose down
 ```
 
-Database connection details (local profile):
-- Host: localhost:5433
-- Database: demo_db
-- Username: demo_user
-- Password: demo_password
+## Workflow
 
-## Architecture
-
-### Backend Structure
-- **Package**: `ai.programujz.demo`
-- **Main Application**: `be/src/main/kotlin/ai/programujz/demo/DemoApplication.kt`
-- **Resources**: `be/src/main/resources/`
-  - `application.yml` - Main configuration
-  - `application-local.yml` - Local development configuration
-  - `db/migration/` - Flyway database migrations (currently empty)
-
-### Key Technologies
-- Spring Boot with Spring Web, Spring Security, Spring Data JDBC
-- Flyway for database migrations
-- PostgreSQL database
-- Gradle build system
-- Java 21 toolchain
-
-### Configuration
-- Active profile: `local`
-- Swagger UI available at: `/api-docs`
-- Database schema validation: Flyway with Spring JPA validation
+[] Phase 1
+    [] Understand the user's request and determine if it relates to backend, frontend
+    [] If the request is touching both backend and frontend, split the task into two separate tasks
+    [] Focus first on first task that is conntected to one module, when we finish we can move into the next one
+[] Phase 2
+    [] Analyze the relevant codebase to understand the context
+    [] Look out for CLAUDE.md for project overview, tech stack, commands and conventions
+[] Phase 3
+    [] Build the plan via architect agent
+    [] Create a step-by-step plan to address prepared plan via the architect
+[] Phase 4
+    [] Execute the plan via the executor agent
+[] Phase 5
+    [] Review the changes via the reviewer agent
+    [] Run the app to validate if everything is working as expected

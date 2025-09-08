@@ -1,68 +1,110 @@
 'use client';
 
-import * as React from 'react';
-import '@/lib/env';
-
-import ArrowLink from '@/components/links/ArrowLink';
-import ButtonLink from '@/components/links/ButtonLink';
-import UnderlineLink from '@/components/links/UnderlineLink';
-import UnstyledLink from '@/components/links/UnstyledLink';
-
-/**
- * SVGR Support
- * Caveat: No React Props Type.
- *
- * You can override the next-env if the type is important to you
- * @see https://stackoverflow.com/questions/68103844/how-to-override-next-js-svg-module-declaration
- */
-import Logo from '~/svg/Logo.svg';
-
-// !STARTERCONF -> Select !STARTERCONF and CMD + SHIFT + F
-// Before you begin editing, follow all comments with `STARTERCONF`,
-// to customize the default configuration.
+import {useState} from 'react';
+import {Plus} from 'lucide-react';
+import {Button} from '@/components/design_system/atoms/Button';
+import {TaskDialog, TaskFilters, TaskList} from '@/components/design_system/organisms';
+import {
+    useArchiveTask,
+    useCompleteTask,
+    useCreateTask,
+    useDeleteTask,
+    useTasks,
+    useUpdateTask
+} from '@/lib/hooks/useTasks';
+import {CreateTaskRequest, Task, TaskFilters as TaskFiltersType, UpdateTaskRequest} from '@/lib/types/task';
 
 export default function HomePage() {
-  return (
-    <main>
-      <section className='bg-white'>
-        <div className='layout relative flex min-h-screen flex-col items-center justify-center py-12 text-center'>
-          <Logo className='w-16' />
-          <h1 className='mt-4'>Next.js + Tailwind CSS + TypeScript Starter</h1>
-          <p className='mt-2 text-sm text-gray-800'>
-            A starter for Next.js, Tailwind CSS, and TypeScript with Absolute
-            Import, Seo, Link component, pre-configured with Husky{' '}
-          </p>
-          <p className='mt-2 text-sm text-gray-700'>
-            <ArrowLink href='https://github.com/theodorusclarence/ts-nextjs-tailwind-starter'>
-              See the repository
-            </ArrowLink>
-          </p>
+    const [filters, setFilters] = useState<TaskFiltersType>({});
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const [editingTask, setEditingTask] = useState<Task | undefined>();
 
-          <ButtonLink className='mt-6' href='/components' variant='light'>
-            See all components
-          </ButtonLink>
+    const {data: tasks = [], isLoading} = useTasks(filters);
+    const createTask = useCreateTask();
+    const updateTask = useUpdateTask();
+    const completeTask = useCompleteTask();
+    const deleteTask = useDeleteTask();
+    const archiveTask = useArchiveTask();
 
-          <UnstyledLink
-            href='https://vercel.com/new/git/external?repository-url=https%3A%2F%2Fgithub.com%2Ftheodorusclarence%2Fts-nextjs-tailwind-starter'
-            className='mt-4'
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              width='92'
-              height='32'
-              src='https://vercel.com/button'
-              alt='Deploy with Vercel'
-            />
-          </UnstyledLink>
+    const handleCreateClick = () => {
+        setEditingTask(undefined);
+        setDialogOpen(true);
+    };
 
-          <footer className='absolute bottom-2 text-gray-700'>
-            © {new Date().getFullYear()} By{' '}
-            <UnderlineLink href='https://theodorusclarence.com?ref=tsnextstarter'>
-              Theodorus Clarence
-            </UnderlineLink>
-          </footer>
+    const handleEditClick = (task: Task) => {
+        setEditingTask(task);
+        setDialogOpen(true);
+    };
+
+    const handleSubmit = async (data: CreateTaskRequest | UpdateTaskRequest) => {
+        try {
+            if (editingTask) {
+                await updateTask.mutateAsync({id: editingTask.id, data: data as UpdateTaskRequest});
+            } else {
+                await createTask.mutateAsync(data as CreateTaskRequest);
+            }
+            setDialogOpen(false);
+            setEditingTask(undefined);
+        } catch (error) {
+            // Error is handled by the mutation hook
+        }
+    };
+
+    const handleComplete = (id: string) => {
+        completeTask.mutate({id});
+    };
+
+    const handleDelete = (id: string) => {
+        if (confirm('Are you sure you want to delete this task?')) {
+            deleteTask.mutate(id);
+        }
+    };
+
+    const handleArchive = (id: string) => {
+        archiveTask.mutate(id);
+    };
+
+    const isSubmitting = createTask.isPending || updateTask.isPending;
+
+    return (
+        <div className="min-h-screen bg-background">
+            <div className="container max-w-4xl mx-auto py-8 px-4">
+                <header className="mb-8">
+                    <h1 className="text-3xl font-bold mb-2">My Tasks</h1>
+                    <p className="text-muted-foreground">
+                        Organize your tasks efficiently with our modern todo list app
+                    </p>
+                </header>
+
+                <div className="mb-6 flex justify-between items-center">
+                    <TaskFilters
+                        filters={filters}
+                        onFiltersChange={setFilters}
+                    />
+                    <Button onClick={handleCreateClick}>
+                        <Plus className="mr-2 h-4 w-4"/>
+                        New Task
+                    </Button>
+                </div>
+
+                <TaskList
+                    tasks={tasks}
+                    isLoading={isLoading}
+                    onComplete={handleComplete}
+                    onEdit={handleEditClick}
+                    onDelete={handleDelete}
+                    onArchive={handleArchive}
+                    onCreateClick={handleCreateClick}
+                />
+
+                <TaskDialog
+                    open={dialogOpen}
+                    onOpenChange={setDialogOpen}
+                    task={editingTask}
+                    onSubmit={handleSubmit}
+                    isSubmitting={isSubmitting}
+                />
+            </div>
         </div>
-      </section>
-    </main>
-  );
+    );
 }
