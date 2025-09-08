@@ -1,5 +1,5 @@
 import { Plus } from 'lucide-react';
-import { Button } from '@/components/design_system/atoms/button';
+import { Button } from '@/components/design_system/atoms/Button';
 
 interface EmptyStateProps {
   onCreateClick: () => void;

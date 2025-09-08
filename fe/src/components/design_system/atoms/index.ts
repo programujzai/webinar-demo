@@ -6,7 +6,7 @@ export { Input } from './Input';
 export { Label } from './label';
 export { Checkbox } from './checkbox';
 export { Badge } from './badge';
-export { Skeleton } from './Skeleton';
+export { default as Skeleton } from './Skeleton';
 export { Icon } from './Icon';
 export { Typography } from './Typography';
 export { Calendar } from './Calendar';

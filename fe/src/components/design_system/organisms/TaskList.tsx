@@ -3,7 +3,7 @@
 import { Task } from '@/lib/types/task';
 import { TaskItem } from './TaskItem';
 import { EmptyState } from './EmptyState';
-import Skeleton from '@/components/Skeleton';
+import { Skeleton } from '@/components/design_system/atoms';
 
 interface TaskListProps {
   tasks: Task[];

@@ -1,7 +1,7 @@
 'use client';
 
 import { Filter, X } from 'lucide-react';
-import { Button } from '@/components/design_system/atoms/button';
+import { Button } from '@/components/design_system/atoms/Button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/design_system/molecules/select';
 import { Badge } from '@/components/design_system/atoms/badge';
 import { TaskFilters as TaskFiltersType, TaskStatus } from '@/lib/types/task';
