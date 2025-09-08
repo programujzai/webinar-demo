@@ -2,10 +2,9 @@
 
 import * as React from "react"
 import { format } from 'date-fns';
-import { Calendar as CalendarIcon } from 'lucide-react';
+import { Calendar as CalendarIcon, ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '../atoms/Button';
-import { Calendar } from '../atoms/Calendar';
 import { Popover, PopoverContent, PopoverTrigger } from './popover';
 import { Label } from '../atoms/label';
 
@@ -45,11 +44,70 @@ export function DatePicker({
   const generatedId = React.useId();
   const pickerId = id || generatedId;
   const [open, setOpen] = React.useState(false);
+  const [currentMonth, setCurrentMonth] = React.useState(() => {
+    const date = value || new Date();
+    return new Date(date.getFullYear(), date.getMonth(), 1);
+  });
   
-  const handleSelect = React.useCallback((date: Date | undefined) => {
+  const handleSelect = React.useCallback((date: Date) => {
     onChange?.(date);
     setOpen(false);
   }, [onChange]);
+  
+  const getDaysInMonth = (date: Date) => {
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const daysInMonth = lastDay.getDate();
+    const startingDayOfWeek = firstDay.getDay();
+    
+    const days: (Date | null)[] = [];
+    
+    // Add empty cells for days before month starts
+    for (let i = 0; i < startingDayOfWeek; i++) {
+      days.push(null);
+    }
+    
+    // Add all days of the month
+    for (let i = 1; i <= daysInMonth; i++) {
+      days.push(new Date(year, month, i));
+    }
+    
+    return days;
+  };
+  
+  const isDateDisabled = (date: Date) => {
+    if (disabled) return true;
+    if (minDate && date < minDate) return true;
+    if (maxDate && date > maxDate) return true;
+    return false;
+  };
+  
+  const isToday = (date: Date) => {
+    const today = new Date();
+    return date.getDate() === today.getDate() &&
+           date.getMonth() === today.getMonth() &&
+           date.getFullYear() === today.getFullYear();
+  };
+  
+  const isSelected = (date: Date) => {
+    if (!value) return false;
+    return date.getDate() === value.getDate() &&
+           date.getMonth() === value.getMonth() &&
+           date.getFullYear() === value.getFullYear();
+  };
+  
+  const goToPreviousMonth = () => {
+    setCurrentMonth(prev => new Date(prev.getFullYear(), prev.getMonth() - 1, 1));
+  };
+  
+  const goToNextMonth = () => {
+    setCurrentMonth(prev => new Date(prev.getFullYear(), prev.getMonth() + 1, 1));
+  };
+  
+  const days = getDaysInMonth(currentMonth);
+  const weekDays = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
   
   return (
     <div className={cn("flex flex-col gap-2", className)}>
@@ -103,24 +161,107 @@ export function DatePicker({
           </Button>
         </PopoverTrigger>
         <PopoverContent 
-          className="w-auto p-0 bg-white rounded-lg shadow-xl border border-gray-200" 
+          className="w-auto p-3 bg-white rounded-lg shadow-xl border border-gray-200" 
           align="start"
         >
-          <Calendar
-            mode="single"
-            selected={value}
-            onSelect={handleSelect}
-            disabled={(date) => {
-              if (disabled) return true;
+          <div className="space-y-3">
+            {/* Month navigation */}
+            <div className="flex items-center justify-between px-1">
+              <Button
+                type="button"
+                onClick={goToPreviousMonth}
+                variant="ghost"
+                size="sm"
+                className="h-7 w-7 p-0 hover:bg-gray-100"
+                aria-label="Previous month"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
               
-              if (minDate && date < minDate) return true;
-              if (maxDate && date > maxDate) return true;
+              <h3 className="text-sm font-semibold text-gray-900">
+                {format(currentMonth, 'MMMM yyyy')}
+              </h3>
               
-              return false;
-            }}
-            initialFocus
-            className="rounded-lg"
-          />
+              <Button
+                type="button"
+                onClick={goToNextMonth}
+                variant="ghost"
+                size="sm"
+                className="h-7 w-7 p-0 hover:bg-gray-100"
+                aria-label="Next month"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
+            
+            {/* Calendar grid */}
+            <div className="grid grid-cols-7 gap-0">
+              {/* Week days header */}
+              {weekDays.map(day => (
+                <div
+                  key={day}
+                  className="text-xs font-medium text-gray-500 text-center py-1.5 px-1"
+                >
+                  {day}
+                </div>
+              ))}
+              
+              {/* Calendar days */}
+              {days.map((date, index) => {
+                if (!date) {
+                  return <div key={`empty-${index}`} className="h-9 w-9" />;
+                }
+                
+                const isDisabled = isDateDisabled(date);
+                const selected = isSelected(date);
+                const today = isToday(date);
+                
+                return (
+                  <Button
+                    key={date.toISOString()}
+                    type="button"
+                    onClick={() => !isDisabled && handleSelect(date)}
+                    disabled={isDisabled}
+                    variant={selected ? "default" : "ghost"}
+                    size="sm"
+                    className={cn(
+                      "h-9 w-9 p-0 font-normal",
+                      "hover:bg-gray-100 hover:text-gray-900",
+                      "focus-visible:ring-1 focus-visible:ring-gray-400",
+                      isDisabled && "opacity-50 cursor-not-allowed hover:bg-transparent text-gray-300",
+                      selected && "bg-blue-600 text-white hover:bg-blue-700 focus-visible:ring-blue-600",
+                      today && !selected && "bg-blue-50 text-blue-700 font-semibold border border-blue-200",
+                      !isDisabled && !selected && !today && "text-gray-700"
+                    )}
+                    aria-label={format(date, 'EEEE, MMMM do, yyyy')}
+                    aria-selected={selected}
+                    aria-disabled={isDisabled}
+                  >
+                    {date.getDate()}
+                  </Button>
+                );
+              })}
+            </div>
+            
+            {/* Today button */}
+            <div className="flex justify-center pt-2 border-t border-gray-100">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  const today = new Date();
+                  setCurrentMonth(new Date(today.getFullYear(), today.getMonth(), 1));
+                  if (!isDateDisabled(today)) {
+                    handleSelect(today);
+                  }
+                }}
+                className="text-xs h-7"
+              >
+                Today
+              </Button>
+            </div>
+          </div>
         </PopoverContent>
       </Popover>
       
