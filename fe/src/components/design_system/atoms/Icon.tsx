@@ -1,45 +1,28 @@
-import { LucideIcon } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { forwardRef } from 'react';
+"use client"
 
-export type IconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+import * as React from "react"
+import { cn } from "@/lib/utils"
 
-interface IconProps {
-  icon: LucideIcon;
-  size?: IconSize;
-  className?: string;
-  color?: 'default' | 'muted' | 'primary' | 'error' | 'success';
+export interface IconProps extends React.SVGAttributes<SVGElement> {
+  size?: number
 }
 
-const sizeStyles: Record<IconSize, string> = {
-  xs: 'h-3 w-3',
-  sm: 'h-4 w-4',
-  md: 'h-5 w-5',
-  lg: 'h-6 w-6',
-  xl: 'h-8 w-8',
-};
-
-const colorStyles: Record<string, string> = {
-  default: 'text-foreground',
-  muted: 'text-muted-foreground',
-  primary: 'text-primary',
-  error: 'text-destructive',
-  success: 'text-green-600',
-};
-
-export const Icon = forwardRef<SVGSVGElement, IconProps>(
-  ({ icon: IconComponent, size = 'md', color = 'default', className }, ref) => {
+const Icon = React.forwardRef<SVGSVGElement, IconProps>(
+  ({ className, size = 16, ...props }, ref) => {
     return (
-      <IconComponent
+      <svg
         ref={ref}
-        className={cn(
-          sizeStyles[size],
-          colorStyles[color],
-          className
-        )}
+        width={size}
+        height={size}
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        className={cn("flex-shrink-0", className)}
+        {...props}
       />
-    );
+    )
   }
-);
+)
+Icon.displayName = "Icon"
 
-Icon.displayName = 'Icon';
+export { Icon }

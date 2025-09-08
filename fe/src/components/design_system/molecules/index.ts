@@ -7,6 +7,4 @@ export { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 export { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './select';
 export { Popover, PopoverContent, PopoverTrigger } from './popover';
 export { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from './form';
-export { FormInput } from './FormInput';
-export { FormSelect } from './FormSelect';
 export { DatePicker } from './DatePicker';

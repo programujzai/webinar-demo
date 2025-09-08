@@ -3,16 +3,13 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { format } from 'date-fns';
-import { CalendarIcon } from 'lucide-react';
 import { Button } from '@/components/design_system/atoms/Button';
 import { Input } from '@/components/design_system/atoms/Input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/design_system/molecules/select';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/design_system/molecules/popover';
-import { Calendar } from '@/components/design_system/atoms/Calendar';
+import { DatePicker } from '@/components/design_system/molecules/DatePicker';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/design_system/molecules/form';
 import { CreateOneTimeTaskInput, createOneTimeTaskSchema } from '@/lib/validations/task';
 import { Task, UpdateTaskRequest } from '@/lib/types/task';
-import { cn } from '@/lib/utils';
 
 interface TaskFormProps {
   task?: Task;
@@ -94,41 +91,18 @@ export function TaskForm({ task, onSubmit, onCancel, isSubmitting }: TaskFormPro
           control={form.control}
           name="dueDate"
           render={({ field }) => (
-            <FormItem className="flex flex-col">
-              <FormLabel>Due Date</FormLabel>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <FormControl>
-                    <Button
-                      variant="outline"
-                      className={cn(
-                        "w-full pl-3 text-left font-normal",
-                        !field.value && "text-muted-foreground"
-                      )}
-                    >
-                      {field.value ? (
-                        format(new Date(field.value), "PPP")
-                      ) : (
-                        <span>Pick a date</span>
-                      )}
-                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                    </Button>
-                  </FormControl>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={field.value ? new Date(field.value) : undefined}
-                    onSelect={(date) => {
-                      field.onChange(date ? format(date, 'yyyy-MM-dd') : '');
-                    }}
-                    disabled={(date) =>
-                      date < new Date(new Date().setHours(0, 0, 0, 0))
-                    }
-                    initialFocus
-                  />
-                </PopoverContent>
-              </Popover>
+            <FormItem>
+              <FormControl>
+                <DatePicker
+                  label="Due Date"
+                  value={field.value ? new Date(field.value) : undefined}
+                  onChange={(date) => {
+                    field.onChange(date ? format(date, 'yyyy-MM-dd') : '');
+                  }}
+                  minDate={new Date(new Date().setHours(0, 0, 0, 0))}
+                  placeholder="Pick a date"
+                />
+              </FormControl>
               <FormMessage />
             </FormItem>
           )}
