@@ -3,9 +3,8 @@
 
 export { Button } from './Button';
 export { Input } from './Input';
-export { Label } from './label';
-export { Checkbox } from './checkbox';
-export { Badge } from './badge';
+export { Label } from './Label';
+export { Checkbox } from './Checkbox';
+export { Badge } from './Badge';
 export { Skeleton } from './Skeleton';
-export { Calendar } from './Calendar';
 export { Icon } from './Icon';

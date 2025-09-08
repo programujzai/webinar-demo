@@ -2,10 +2,10 @@
 
 import { Check, Edit, Trash, Archive, Calendar, RefreshCw } from 'lucide-react';
 import { format } from 'date-fns';
-import { Card } from '@/components/design_system/molecules/card';
+import { Card } from '@/components/design_system/molecules/Card';
 import { Button } from '@/components/design_system/atoms/Button';
-import { Badge } from '@/components/design_system/atoms/badge';
-import { Checkbox } from '@/components/design_system/atoms/checkbox';
+import { Badge } from '@/components/design_system/atoms/Badge';
+import { Checkbox } from '@/components/design_system/atoms/Checkbox';
 import { 
   DropdownMenu, 
   DropdownMenuContent, 

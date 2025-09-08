@@ -109,7 +109,7 @@ export function TaskForm({ task, onSubmit, onCancel, isSubmitting }: TaskFormPro
         />
 
         <div className="flex gap-3 pt-4">
-          <Button type="submit" disabled={isSubmitting}>
+          <Button type="submit" variant="default" disabled={isSubmitting}>
             {isSubmitting ? 'Saving...' : isEditing ? 'Update Task' : 'Create Task'}
           </Button>
           <Button type="button" variant="outline" onClick={onCancel}>
