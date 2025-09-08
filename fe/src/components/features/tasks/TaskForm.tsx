@@ -8,8 +8,9 @@ import { Input } from '@/components/design_system/atoms/Input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/design_system/molecules/select';
 import { DatePicker } from '@/components/design_system/molecules/DatePicker';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/design_system/molecules/form';
-import { CreateOneTimeTaskInput, createOneTimeTaskSchema } from '@/lib/validations/task';
-import { Task, UpdateTaskRequest } from '@/lib/types/task';
+import { CreateOneTimeTaskInput, createOneTimeTaskSchema } from './validations';
+import { Task, UpdateTaskRequest } from './types';
+import { TASK_CATEGORIES, TASK_CATEGORY_LABELS } from './constants';
 
 interface TaskFormProps {
   task?: Task;
@@ -75,11 +76,11 @@ export function TaskForm({ task, onSubmit, onCancel, isSubmitting }: TaskFormPro
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="work">Work</SelectItem>
-                  <SelectItem value="personal">Personal</SelectItem>
-                  <SelectItem value="shopping">Shopping</SelectItem>
-                  <SelectItem value="health">Health</SelectItem>
-                  <SelectItem value="other">Other</SelectItem>
+                  {TASK_CATEGORIES.map((category) => (
+                    <SelectItem key={category} value={category}>
+                      {TASK_CATEGORY_LABELS[category]}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
               <FormMessage />

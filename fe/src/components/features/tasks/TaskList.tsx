@@ -1,8 +1,8 @@
 'use client';
 
-import { Task } from '@/lib/types/task';
+import { Task } from './types';
 import { TaskItem } from './TaskItem';
-import { EmptyState } from './EmptyState';
+import { EmptyState } from '@/components/design_system/organisms';
 import { Skeleton } from '@/components/design_system/atoms';
 
 interface TaskListProps {
