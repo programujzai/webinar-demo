@@ -65,6 +65,9 @@ Stop database:
 ```bash
 docker-compose down
 ```
+## Documentation requirements:
+- Simple and clear language,
+- In directory AI_DOCS
 
 ## Documentation
     If we are documenting anything write it into AI_DOCS directory
