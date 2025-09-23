@@ -8,6 +8,7 @@ data class CreateOneTimeTaskRequest(
     @field:NotBlank
     override val name: String,
     override val category: String? = null,
+    override val tags: List<java.util.UUID>? = null,
     @field:Future(message = "Due date must be in the future")
     val dueDate: LocalDate
 ) : CreateTaskRequest()

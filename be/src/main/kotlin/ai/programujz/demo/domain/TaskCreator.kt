@@ -12,23 +12,32 @@ import java.time.LocalDate
 
 @Component
 class TaskCreator(
-    private val taskRepository: TaskRepository
+    private val taskRepository: TaskRepository,
+    private val tagService: TagService
 ) {
     
     fun createTask(request: CreateTaskRequest): Task {
         val displayOrder = taskRepository.getMaxDisplayOrder() + 1
 
+        // Validate tags if provided
+        val tags = request.tags?.let { tagIds ->
+            tagService.validateTagLimit(tagIds)
+            tagService.validateTagsExist(tagIds)
+            tagService.getTagsByIds(tagIds)
+        } ?: emptyList()
+
         return when (request) {
-            is CreateOneTimeTaskRequest -> createOneTimeTask(request, displayOrder)
-            is CreateRecurringTaskRequest -> createRecurringTask(request, displayOrder)
+            is CreateOneTimeTaskRequest -> createOneTimeTask(request, displayOrder, tags)
+            is CreateRecurringTaskRequest -> createRecurringTask(request, displayOrder, tags)
         }
     }
 
-    private fun createOneTimeTask(request: CreateOneTimeTaskRequest, displayOrder: Int): OneTimeTask {
+    private fun createOneTimeTask(request: CreateOneTimeTaskRequest, displayOrder: Int, tags: List<Tag>): OneTimeTask {
         val task = OneTimeTask(
             name = request.name,
             displayOrder = displayOrder,
             category = request.category,
+            tags = tags,
             dueDate = request.dueDate,
             status = TaskStatus.PENDING
         )
@@ -36,7 +45,7 @@ class TaskCreator(
         return taskRepository.save(task) as OneTimeTask
     }
 
-    private fun createRecurringTask(request: CreateRecurringTaskRequest, displayOrder: Int): RecurringTask {
+    private fun createRecurringTask(request: CreateRecurringTaskRequest, displayOrder: Int, tags: List<Tag>): RecurringTask {
         val nextDueDate = calculateNextDueDate(
             request.startDate,
             request.recurrencePattern,
@@ -47,6 +56,7 @@ class TaskCreator(
             name = request.name,
             displayOrder = displayOrder,
             category = request.category,
+            tags = tags,
             recurrencePattern = request.recurrencePattern,
             dayOfWeek = request.dayOfWeek,
             startDate = request.startDate,

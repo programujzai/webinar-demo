@@ -7,5 +7,6 @@ data class TaskSearchParams(
     val status: TaskStatus? = null,
     val dueDate: LocalDate? = null,
     val startDate: LocalDate? = null,
-    val endDate: LocalDate? = null
+    val endDate: LocalDate? = null,
+    val tagIds: List<TagId>? = null
 )

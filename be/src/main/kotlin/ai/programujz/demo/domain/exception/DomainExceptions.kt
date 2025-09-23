@@ -32,3 +32,23 @@ class CategoryNotFoundException(category: String) : DomainException(
     message = "Category '$category' not found",
     errorCode = ErrorCode.CATEGORY_NOT_FOUND
 )
+
+class TagNotFoundException(id: String) : DomainException(
+    message = "Tag with id $id not found",
+    errorCode = ErrorCode.TAG_NOT_FOUND
+)
+
+class TagAlreadyExistsException(name: String) : DomainException(
+    message = "Tag with name '$name' already exists",
+    errorCode = ErrorCode.TAG_ALREADY_EXISTS
+)
+
+class TagsNotFoundException(ids: List<String>) : DomainException(
+    message = "Tags with ids ${ids.joinToString(", ")} not found",
+    errorCode = ErrorCode.TAGS_NOT_FOUND
+)
+
+class TooManyTagsException(current: Int, max: Int) : DomainException(
+    message = "Too many tags: $current. Maximum allowed: $max",
+    errorCode = ErrorCode.TOO_MANY_TAGS
+)

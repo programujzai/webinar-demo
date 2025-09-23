@@ -7,6 +7,7 @@ import java.time.LocalDate
 data class UpdateTaskRequest(
     val name: String? = null,
     val category: String? = null,
+    val tags: List<java.util.UUID>? = null,
     val dueDate: LocalDate? = null,
     val recurrencePattern: RecurrencePattern? = null,
     val dayOfWeek: DayOfWeek? = null,

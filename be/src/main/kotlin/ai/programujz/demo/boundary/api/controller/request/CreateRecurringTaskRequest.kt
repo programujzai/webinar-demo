@@ -10,6 +10,7 @@ data class CreateRecurringTaskRequest(
     @field:NotBlank
     override val name: String,
     override val category: String? = null,
+    override val tags: List<java.util.UUID>? = null,
     val recurrencePattern: RecurrencePattern,
     val dayOfWeek: DayOfWeek? = null,
     @field:FutureOrPresent(message = "Start date cannot be in the past")

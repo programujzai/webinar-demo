@@ -11,4 +11,5 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo
 sealed class CreateTaskRequest {
     abstract val name: String
     abstract val category: String?
+    abstract val tags: List<java.util.UUID>?
 }

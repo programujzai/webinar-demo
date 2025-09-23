@@ -48,4 +48,6 @@ interface TaskAggregateRepository : CrudRepository<TaskAggregate, UUID> {
         @Param("taskId") taskId: UUID,
         @Param("date") date: LocalDate
     ): Boolean
+
+    fun findByIdInAndDeletedAtIsNullOrderByDisplayOrder(ids: List<UUID>): List<TaskAggregate>
 }

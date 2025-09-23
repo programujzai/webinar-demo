@@ -5,11 +5,13 @@ import ai.programujz.demo.domain.model.TaskCompletion
 import ai.programujz.demo.domain.model.TaskId
 import ai.programujz.demo.domain.model.TaskSearchParams
 import ai.programujz.demo.domain.model.TaskStatus
+import ai.programujz.demo.infrastructure.persistence.entity.TaskAggregate
 import ai.programujz.demo.infrastructure.persistence.entity.TaskType
 import ai.programujz.demo.infrastructure.persistence.mapper.TaskPersistenceMapper
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDate
+import java.util.*
 import ai.programujz.demo.domain.repository.TaskRepository as DomainTaskRepository
 
 /**
@@ -20,7 +22,9 @@ import ai.programujz.demo.domain.repository.TaskRepository as DomainTaskReposito
 @Transactional
 class TaskRepositoryImpl(
     private val taskAggregateRepository: TaskAggregateRepository,
-    private val mapper: TaskPersistenceMapper
+    private val mapper: TaskPersistenceMapper,
+    private val tagRepository: ai.programujz.demo.domain.repository.TagRepository,
+    private val taskTagEntityRepository: TaskTagEntityRepository
 ) : DomainTaskRepository {
 
     override fun save(task: Task): Task {
@@ -31,7 +35,47 @@ class TaskRepositoryImpl(
 
         val aggregate = mapper.toTaskAggregate(task, existingAggregate)
         val savedAggregate = taskAggregateRepository.save(aggregate)
-        return mapper.toDomainTask(savedAggregate)
+        
+        // Handle tag associations
+        val savedTaskId = savedAggregate.id?.let { TaskId.from(it) }
+            ?: throw IllegalStateException("Saved task must have an ID")
+            
+        // Update tag associations
+        tagRepository.setTaskTags(savedTaskId, task.tags.mapNotNull { it.id })
+        
+        // Return task with tags
+        return populateTaskWithTags(savedAggregate)
+    }
+    
+    /**
+     * Helper method to populate a task with its tags
+     */
+    private fun populateTaskWithTags(aggregate: TaskAggregate): Task {
+        val taskId = aggregate.id?.let { TaskId.from(it) } ?: return mapper.toDomainTask(aggregate)
+        val tags = tagRepository.findTagsByTaskId(taskId)
+        return mapper.toDomainTask(aggregate, tags)
+    }
+    
+    /**
+     * Helper method to populate multiple tasks with their tags efficiently
+     */
+    private fun populateTasksWithTags(aggregates: List<TaskAggregate>): List<Task> {
+        if (aggregates.isEmpty()) return emptyList()
+        
+        // Get all task IDs
+        val taskIds = aggregates.mapNotNull { it.id?.let { uuid -> TaskId.from(uuid) } }
+        
+        // Group tags by task ID for efficient lookup
+        val tagsByTaskId = taskIds.associateWith { taskId ->
+            tagRepository.findTagsByTaskId(taskId)
+        }
+        
+        // Map aggregates to domain tasks with their tags
+        return aggregates.map { aggregate ->
+            val taskId = aggregate.id?.let { TaskId.from(it) }
+            val tags = taskId?.let { tagsByTaskId[it] } ?: emptyList()
+            mapper.toDomainTask(aggregate, tags)
+        }
     }
 
     override fun findById(id: TaskId): Task? {
@@ -39,30 +83,30 @@ class TaskRepositoryImpl(
             .filter { it.deletedAt == null }
             .orElse(null)
             ?.let { aggregate ->
-                mapper.toDomainTask(aggregate)
+                populateTaskWithTags(aggregate)
             }
     }
 
     override fun findAll(): List<Task> {
         return taskAggregateRepository.findAll()
             .filter { it.deletedAt == null }
-            .map { mapper.toDomainTask(it) }
+            .let { populateTasksWithTags(it) }
     }
 
     override fun findAllActive(): List<Task> {
         return taskAggregateRepository.findByDeletedAtIsNullOrderByDisplayOrder()
-            .map { mapper.toDomainTask(it) }
+            .let { populateTasksWithTags(it) }
     }
 
     override fun findByCategory(category: String): List<Task> {
         return taskAggregateRepository.findByCategoryAndDeletedAtIsNullOrderByDisplayOrder(category)
-            .map { mapper.toDomainTask(it) }
+            .let { populateTasksWithTags(it) }
     }
 
     override fun findByStatus(status: TaskStatus): List<Task> {
         val entityStatus = ai.programujz.demo.infrastructure.persistence.entity.TaskStatus.valueOf(status.name)
         return taskAggregateRepository.findByStatusAndDeletedAtIsNullOrderByDisplayOrder(entityStatus)
-            .map { mapper.toDomainTask(it) }
+            .let { populateTasksWithTags(it) }
     }
 
     override fun findDueToday(): List<Task> {
@@ -79,7 +123,7 @@ class TaskRepositoryImpl(
                         aggregate.recurringDetails?.nextDueDate == today
                 }
             }
-            .map { mapper.toDomainTask(it) }
+            .let { populateTasksWithTags(it) }
     }
 
     override fun findDueBetween(startDate: LocalDate, endDate: LocalDate): List<Task> {
@@ -97,11 +141,29 @@ class TaskRepositoryImpl(
                     }
                 }
             }
-            .map { mapper.toDomainTask(it) }
+            .let { populateTasksWithTags(it) }
     }
 
     override fun findBySearchParams(searchParams: TaskSearchParams): List<Task> {
-        var aggregates = taskAggregateRepository.findByDeletedAtIsNullOrderByDisplayOrder()
+        // Start with all tasks or filter by tags first
+        var aggregates = if (searchParams.tagIds != null && searchParams.tagIds.isNotEmpty()) {
+            val tagUuids = searchParams.tagIds.map { it.value }
+            // Get task IDs that have any of the specified tags
+            val taskIds = mutableSetOf<UUID>()
+            tagUuids.forEach { tagId ->
+                val taskTagEntities = taskTagEntityRepository.findByTagId(tagId)
+                taskIds.addAll(taskTagEntities.map { it.taskId })
+            }
+            
+            // Fetch tasks by IDs
+            if (taskIds.isNotEmpty()) {
+                taskAggregateRepository.findByIdInAndDeletedAtIsNullOrderByDisplayOrder(taskIds.toList())
+            } else {
+                emptyList()
+            }
+        } else {
+            taskAggregateRepository.findByDeletedAtIsNullOrderByDisplayOrder()
+        }
 
         // Filter by category if provided
         searchParams.category?.let { category ->
@@ -143,7 +205,7 @@ class TaskRepositoryImpl(
             }
         }
 
-        return aggregates.map { mapper.toDomainTask(it) }
+        return populateTasksWithTags(aggregates)
     }
 
     override fun delete(id: TaskId) {

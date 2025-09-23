@@ -11,6 +11,7 @@ data class OneTimeTaskResponse(
     override val displayOrder: Int,
     override val category: String?,
     override val status: TaskStatus,
+    override val tags: List<TagSummaryResponse>,
     val dueDate: LocalDate,
     val completedAt: Instant?,
     override val createdAt: Instant,

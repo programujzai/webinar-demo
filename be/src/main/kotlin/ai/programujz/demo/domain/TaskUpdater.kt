@@ -17,7 +17,8 @@ import java.util.*
 
 @Component
 class TaskUpdater(
-    private val taskRepository: TaskRepository
+    private val taskRepository: TaskRepository,
+    private val tagService: TagService
 ) {
     
     fun updateTask(id: TaskId, request: UpdateTaskRequest): Task {
@@ -28,11 +29,19 @@ class TaskUpdater(
             throw TaskArchivedException(id.value)
         }
 
+        // Handle tags update if provided
+        val updatedTags = request.tags?.let { tagIds ->
+            tagService.validateTagLimit(tagIds)
+            tagService.validateTagsExist(tagIds)
+            tagService.getTagsByIds(tagIds)
+        } ?: existingTask.tags
+
         return when (existingTask) {
             is OneTimeTask -> {
                 val updated = existingTask.copy(
                     name = request.name ?: existingTask.name,
                     category = request.category ?: existingTask.category,
+                    tags = updatedTags,
                     dueDate = request.dueDate ?: existingTask.dueDate
                 )
                 taskRepository.save(updated)
@@ -42,6 +51,7 @@ class TaskUpdater(
                 val updated = existingTask.copy(
                     name = request.name ?: existingTask.name,
                     category = request.category ?: existingTask.category,
+                    tags = updatedTags,
                     recurrencePattern = request.recurrencePattern ?: existingTask.recurrencePattern,
                     dayOfWeek = request.dayOfWeek ?: existingTask.dayOfWeek,
                     endDate = request.endDate ?: existingTask.endDate

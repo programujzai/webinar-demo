@@ -19,7 +19,8 @@ class TaskService(
     private val taskFetcher: TaskFetcher,
     private val taskCompleter: TaskCompleter,
     private val taskUpdater: TaskUpdater,
-    private val taskArchiver: TaskArchiver
+    private val taskArchiver: TaskArchiver,
+    private val tagService: TagService
 ) {
 
     fun createTask(request: CreateTaskRequest): Task {

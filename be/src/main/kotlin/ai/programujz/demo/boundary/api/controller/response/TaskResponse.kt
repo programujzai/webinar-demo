@@ -19,4 +19,11 @@ sealed class TaskResponse {
     abstract val status: TaskStatus
     abstract val createdAt: Instant
     abstract val updatedAt: Instant
+    abstract val tags: List<TagSummaryResponse>
 }
+
+data class TagSummaryResponse(
+    val id: UUID,
+    val name: String,
+    val color: String
+)

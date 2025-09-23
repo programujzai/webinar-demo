@@ -6,6 +6,7 @@ import ai.programujz.demo.domain.model.Task
 import ai.programujz.demo.domain.model.TaskCompletion
 import ai.programujz.demo.domain.model.TaskCompletionId
 import ai.programujz.demo.domain.model.TaskId
+import ai.programujz.demo.domain.model.Tag
 import ai.programujz.demo.domain.model.toTaskCompletionId
 import ai.programujz.demo.domain.model.toTaskId
 import ai.programujz.demo.domain.model.toUUID as taskIdToUUID
@@ -76,7 +77,7 @@ class TaskPersistenceMapper {
     /**
      * Convert persistence TaskAggregate to domain Task
      */
-    fun toDomainTask(aggregate: TaskAggregate): Task {
+    fun toDomainTask(aggregate: TaskAggregate, tags: List<Tag> = emptyList()): Task {
         return when (aggregate.taskType) {
             TaskType.ONE_TIME -> {
                 val details = aggregate.oneTimeDetails
@@ -88,6 +89,7 @@ class TaskPersistenceMapper {
                     displayOrder = aggregate.displayOrder,
                     category = aggregate.category,
                     status = aggregate.status.toDomainStatus(),
+                    tags = tags,
                     dueDate = details.dueDate,
                     completedAt = details.completedAt
                 )
@@ -103,6 +105,7 @@ class TaskPersistenceMapper {
                     displayOrder = aggregate.displayOrder,
                     category = aggregate.category,
                     status = aggregate.status.toDomainStatus(),
+                    tags = tags,
                     recurrencePattern = details.recurrencePattern.toDomainPattern(),
                     dayOfWeek = details.dayOfWeek?.let { DayOfWeek.of(it) },
                     startDate = details.startDate,

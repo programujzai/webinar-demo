@@ -10,6 +10,7 @@ sealed class Task {
     abstract val displayOrder: Int
     abstract val category: String?
     abstract val status: TaskStatus
+    abstract val tags: List<Tag>
 }
 
 data class OneTimeTask(
@@ -18,6 +19,7 @@ data class OneTimeTask(
     override val displayOrder: Int,
     override val category: String? = null,
     override val status: TaskStatus = TaskStatus.PENDING,
+    override val tags: List<Tag> = emptyList(),
     val dueDate: LocalDate,
     val completedAt: Instant? = null
 ) : Task()
@@ -28,6 +30,7 @@ data class RecurringTask(
     override val displayOrder: Int,
     override val category: String? = null,
     override val status: TaskStatus = TaskStatus.PENDING,
+    override val tags: List<Tag> = emptyList(),
     val recurrencePattern: RecurrencePattern,
     val dayOfWeek: DayOfWeek? = null,
     val startDate: LocalDate,

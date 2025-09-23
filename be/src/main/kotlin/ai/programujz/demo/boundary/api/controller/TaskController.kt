@@ -6,7 +6,9 @@ import ai.programujz.demo.boundary.api.controller.request.ReorderTasksRequest
 import ai.programujz.demo.boundary.api.controller.request.UpdateTaskRequest
 import ai.programujz.demo.boundary.api.controller.response.TaskCompletionResponse
 import ai.programujz.demo.boundary.api.controller.response.TaskResponse
+import ai.programujz.demo.domain.TagService
 import ai.programujz.demo.domain.TaskService
+import ai.programujz.demo.domain.model.TagId
 import ai.programujz.demo.domain.model.TaskSearchParams
 import ai.programujz.demo.domain.model.TaskStatus
 import jakarta.validation.Valid
@@ -17,6 +19,7 @@ import java.util.*
 
 @RestController
 @RequestMapping("/api/v1/tasks")
+@CrossOrigin(origins = ["http://localhost:3000"])
 class TaskController(
     private val taskService: TaskService
 ) {
@@ -46,14 +49,18 @@ class TaskController(
         @RequestParam(required = false) status: TaskStatus?,
         @RequestParam(required = false) dueDate: LocalDate?,
         @RequestParam(required = false) startDate: LocalDate?,
-        @RequestParam(required = false) endDate: LocalDate?
+        @RequestParam(required = false) endDate: LocalDate?,
+        @RequestParam(required = false) tags: List<UUID>?
     ): List<TaskResponse> {
+        val tagIds = tags?.map { TagId.from(it) }
+        
         val searchParams = TaskSearchParams(
             category = category,
             status = status,
             dueDate = dueDate,
             startDate = startDate,
-            endDate = endDate
+            endDate = endDate,
+            tagIds = tagIds
         )
         
         return taskService.getBySearchParams(searchParams).map { it.toResponse() }
