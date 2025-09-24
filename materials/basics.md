@@ -14,3 +14,6 @@
 - user / global
 - project
 - local
+
+# Project path
+Use $CLAUDE_PROJECT_DIR

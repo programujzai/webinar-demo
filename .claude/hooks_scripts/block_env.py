@@ -17,9 +17,8 @@ def main():
     # Ensure Claude isn't trying to read the .env file
     if ".env" in read_path:
         print("You cannot read the .env file read example.env instead", file=sys.stderr)
-        sys.exit(2)
+        sys.exit(2) # or 1 if not blocking
     else:
         sys.exit(0)
-
 
 main()
