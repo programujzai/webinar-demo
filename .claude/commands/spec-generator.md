@@ -1,5 +1,6 @@
 [] Phase 1:
-Analyse `AI_DOCS/draft-specification.md` which is a draft of specification for a new functionality.
+    [] 1: Fetch description from TODOIST MCP to the task $1 name.
+    [] 2: Analyse this specification and understand what is the new functionality about.
 
 [] Phase 2:
 Verify which parts of the system is affected by new functionality.

@@ -68,6 +68,9 @@ docker-compose down
 
 ## Workflow
 
+[] Phase 0
+    [] If user is asking If there is something TODO, check the task list in the TODOIST MCP
+
 [] Phase 1
     [] Understand the user's request and determine if it relates to backend, frontend
     [] If the request is touching both backend and frontend, split the task into two separate tasks
