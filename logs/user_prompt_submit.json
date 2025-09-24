@@ -1,0 +1,42 @@
+[
+  {
+    "session_id": "0df3adf1-c62e-4771-bc36-09ce969ee6e8",
+    "transcript_path": "/Users/jakubpruszynski/.claude/projects/-Users-jakubpruszynski-WebstormProjects-webinar-demo/0df3adf1-c62e-4771-bc36-09ce969ee6e8.jsonl",
+    "cwd": "/Users/jakubpruszynski/WebstormProjects/webinar-demo",
+    "permission_mode": "default",
+    "hook_event_name": "UserPromptSubmit",
+    "prompt": "Print"
+  },
+  {
+    "session_id": "944909e8-eddc-4848-9b3d-0a7ea6a07c78",
+    "transcript_path": "/Users/jakubpruszynski/.claude/projects/-Users-jakubpruszynski-WebstormProjects-webinar-demo/944909e8-eddc-4848-9b3d-0a7ea6a07c78.jsonl",
+    "cwd": "/Users/jakubpruszynski/WebstormProjects/webinar-demo",
+    "permission_mode": "default",
+    "hook_event_name": "UserPromptSubmit",
+    "prompt": "Print"
+  },
+  {
+    "session_id": "0ed5b20d-9029-4d07-bb80-72bf0b9bac0d",
+    "transcript_path": "/Users/jakubpruszynski/.claude/projects/-Users-jakubpruszynski-WebstormProjects-webinar-demo/0ed5b20d-9029-4d07-bb80-72bf0b9bac0d.jsonl",
+    "cwd": "/Users/jakubpruszynski/WebstormProjects/webinar-demo",
+    "permission_mode": "default",
+    "hook_event_name": "UserPromptSubmit",
+    "prompt": "Print"
+  },
+  {
+    "session_id": "c966bddc-7bee-44b4-b0ed-ba5d652d0ba6",
+    "transcript_path": "/Users/jakubpruszynski/.claude/projects/-Users-jakubpruszynski-WebstormProjects-webinar-demo/c966bddc-7bee-44b4-b0ed-ba5d652d0ba6.jsonl",
+    "cwd": "/Users/jakubpruszynski/WebstormProjects/webinar-demo",
+    "permission_mode": "default",
+    "hook_event_name": "UserPromptSubmit",
+    "prompt": "List all failes"
+  },
+  {
+    "session_id": "c966bddc-7bee-44b4-b0ed-ba5d652d0ba6",
+    "transcript_path": "/Users/jakubpruszynski/.claude/projects/-Users-jakubpruszynski-WebstormProjects-webinar-demo/c966bddc-7bee-44b4-b0ed-ba5d652d0ba6.jsonl",
+    "cwd": "/Users/jakubpruszynski/WebstormProjects/webinar-demo",
+    "permission_mode": "default",
+    "hook_event_name": "UserPromptSubmit",
+    "prompt": "List all files\n"
+  }
+]
